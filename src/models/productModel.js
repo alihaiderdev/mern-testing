@@ -1,6 +1,8 @@
-let products = require("../data/products.json");
+let products = require("./products.json");
+// console.log(products);
 const { v4: uuidv4 } = require("uuid");
 const { writeDataToFile } = require("../utils");
+const fs = require("fs");
 
 function findAll() {
   return new Promise((resolve, reject) => {
@@ -20,7 +22,12 @@ function create(product) {
     const newProduct = { id: uuidv4(), ...product };
     products.push(newProduct);
     if (process.env.NODE_ENV !== "test") {
-      writeDataToFile("./data/products.json", products);
+      fs.writeFileSync("./products.json", JSON.stringify(products), "utf-8", (err) => {
+        if (err) {
+          console.log(err);
+        }
+      });
+      // writeDataToFile("../data/products.json", products);
     }
     resolve(newProduct);
   });
